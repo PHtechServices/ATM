@@ -268,7 +268,8 @@ function FirstPage(props) {
         else if (startTaskPage["title"] === "Update Task Status") {
             const data = JSON.stringify({
                 "data": { "comments": comments },
-                "objid": id
+                "objid": id,
+                "key": "task updates"
             }
             );
 

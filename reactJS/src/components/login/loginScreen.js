@@ -12,10 +12,7 @@ import CalendarAPI from '../googleAuth/calendar';
 function Login() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  // const [classTeacher, setCT] = useState("")
-  // const [rmEmail, setRMEmail] = useState("")
-  // const [rmName, setRMName] = useState("")
-  // const [subjects, setSubjects] = useState("")
+
   const onUserChange = (e) => {
     setUserName(e.target.value);
   }
@@ -29,7 +26,8 @@ function Login() {
     const data = JSON.stringify({
       "userDetails": {
         "userName": userName,
-        "password": password
+        "password": password,
+        "isParent":"0"
       }
     });
 
@@ -112,25 +110,45 @@ function Login() {
                   document.getElementById('root')
                 );
               })
+              const data = JSON.stringify({
+                "assigned": mail
+              });
+
+              var config = {
+                method: 'POST',
+                url: 'http://127.0.0.1:5000/taskassign',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                data: data
+              };
+
+              axios(config)
+                .then(response => {
+                  var description = response.data["data"]
+                  const completedTasksLength = Object.keys(description["completedTask"][0]).length
+                  const incompleteTasks = Object.keys(description["activeTask"][0]).length+Object.keys(description["backlogTask"][0]).length+Object.keys(description["futureTask"][0]).length+Object.keys(description["urgentTask"][0]).length
+                  ReactDOM.render(
+                    <React.StrictMode>
+                      <ChatBar designation={designation} name={dd} mail={mail} classTeacher={classTeacher} rmEmail={rmEmail}
+                        rmName={rmName} subjects={subjects} completedTasksLength={completedTasksLength} incompleteTasks={incompleteTasks}/>
+                    </React.StrictMode>,
+                    document.getElementById('sideb'));
+
+                })
 
               ReactDOM.render(
                 <React.StrictMode>
                   <HomeScreen name={dd} mail={mail} />
                 </React.StrictMode>,
                 document.getElementById('dLogin'));
-
               ReactDOM.render(
                 <React.StrictMode>
                   <Notices mail={mail} name={dd} />
                 </React.StrictMode>,
                 document.getElementById('notices'));
 
-              ReactDOM.render(
-                <React.StrictMode>
-                  <ChatBar designation={designation} name={dd} mail={mail} classTeacher={classTeacher} rmEmail={rmEmail} 
-            rmName={rmName} subjects={subjects}/>
-                </React.StrictMode>,
-                document.getElementById('sideb'));
+
             }
             )
         }

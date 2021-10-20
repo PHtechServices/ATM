@@ -8,6 +8,8 @@ db = client.AtmPohu
 db2 = client.students
 db3 = client.attendaceqr
 db4 = client.attendance
+collectionSC=db.studyCentralInsert
+parentCollection=db.ParentsList
 class1 = db4.class1
 class2 = db4.class2
 class3 = db4.class3
@@ -33,6 +35,7 @@ collectionStatus = db.TaskStatus
 collectionClassInfo = db.ClassInfo
 collectionTeacherAssignments = db.teacherAssignments
 collectionMeetings = db.meetings
+broadcast = db.broadcast
 
 eventTemplate = {
         'summary': 'Google I/O 2015',

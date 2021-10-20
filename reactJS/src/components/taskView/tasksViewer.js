@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import EditTask from '../editTasks/editTask';
 import { useState } from 'react';
+import TaskProfile from '../taskProfile/taskProfile';
 
 
 
@@ -116,6 +117,83 @@ function TaskViewer(props) {
     const [colorTaskUpdated, setColorUpdated] = useState("")
     const pop = props.pop
 
+    const openTaskView = (e) => {
+        var inputPlaceholder = []
+
+        {
+            const id = e.target.id
+            const data = JSON.stringify({
+                "objid": id
+            });
+
+            var config = {
+                method: 'POST',
+                url: 'http://127.0.0.1:5000/getjson',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
+
+            axios(config)
+                .then(response => {
+                    const test = response.data["json"]
+                    const listItems = Object.keys(test).map((key, index) => (
+                        inputPlaceholder.push(test[key])
+                    ))
+                    const data = JSON.stringify({
+                        "taskID": id
+                    });
+            
+                    var config = {
+                        method: 'POST',
+                        url: 'http://127.0.0.1:5000/taskstatus',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        data: data
+                    };
+                    axios(config)
+                .then(response => {
+                    let title;
+                    const componentsInput = response.data["status"]
+                    if (componentsInput==="Start Task") {
+                        title=componentsInput
+                    }
+                    else if (componentsInput==="Update Task Status") {
+                        title="Finish Task"
+                    }
+                    console.log(title)
+                    let status
+                    if (title==="Start Task") {
+                        status="Yet to Start"
+                      }
+                      else if (title==="Update Task Status") {
+                        status="Ongoing"
+                      }
+                      else if (title==="Finish Task") {
+                        status="Pending Approval"
+                      }
+                      else if (title==="Approved") {
+                        status="Approved"
+                      }
+                      else  {
+                        status="Rejected"
+                      }
+                    ReactDOM.render(
+                        <React.StrictMode>
+                            <TaskProfile status={status} title={title} id={e.target.id} mail={props.mail} inputPlaceholder={inputPlaceholder}/>
+                        </React.StrictMode>,
+                        document.getElementById('dLogin'));
+                    });
+                    
+                })
+                .catch(function (error) {
+                    console.log("error")
+                });
+            }
+    }
+
     const openTaskEditor = (e) => {
         var inputPlaceholder = []
 
@@ -203,6 +281,7 @@ function TaskViewer(props) {
     listItemsActive = Object.keys(description["activeTask"][0]).map((key, index) => (
         <tr>
             <td class="tick"><label id={description[key]}>{key}</label></td>
+            <td><button id={description["activeTask"][0][key]} onClick={openTaskView} class="offset">View</button></td>
             {props.cTask && <td><button id={description["activeTask"][0][key]} onClick={openTaskEditor} class="offset">Edit</button></td>}
             <td><button id={description["activeTask"][0][key]} onClick={openTaskUpdater("activeTaskID")} class="offset">Update</button></td>
         </tr>
@@ -212,6 +291,7 @@ function TaskViewer(props) {
     listItemsBacklog = Object.keys(description["backlogTask"][0]).map((key, index) => (
         <tr>
             <td class="tick"><label id={description[key]}>{key}</label></td>
+            <td><button id={description["backlogTask"][0][key]} onClick={openTaskView} class="offset">View</button></td>
             {/* style={{ color: pop[description[key]][0] == "medium" ? "orange" : pop[description[key]][0] == "high" ? "red" : "green" }} */}
             {props.cTask && <td><button id={description["backlogTask"][0][key]} onClick={openTaskEditor} class="offset">Edit</button></td>}
             <td><button id={description["backlogTask"][0][key]} onClick={openTaskUpdater("backlogTaskID")} class="offset">Update</button></td>
@@ -222,6 +302,7 @@ function TaskViewer(props) {
     listItemsCompleted = Object.keys(description["completedTask"][0]).map((key, index) => (
         <tr>
             <td class="tick"><label id={description[key]}>{key}</label></td>
+            <td><button id={description["completedTask"][0][key]} onClick={openTaskView} class="offset">View</button></td>
             {/* style={{ color: pop[description[key]][0] == "medium" ? "orange" : pop[description[key]][0] == "high" ? "red" : "green" }} */}
             {props.cTask && <td><button id={description["completedTask"][0][key]} onClick={openTaskEditor} class="offset">Edit</button></td>}
             <td><button id={description["completedTask"][0][key]} onClick={openTaskUpdater("completedTaskID")} class="offset">Update</button></td>
@@ -232,6 +313,7 @@ function TaskViewer(props) {
     listItemsFuture = Object.keys(description["futureTask"][0]).map((key, index) => (
         <tr>
             <td class="tick"><label id={description[key]}>{key}</label></td>
+            <td><button id={description["futureTask"][0][key]} onClick={openTaskView} class="offset">View</button></td>
             {/* style={{ color: pop[description[key]][0] == "medium" ? "orange" : pop[description[key]][0] == "high" ? "red" : "green" }} */}
             {props.cTask && <td><button id={description["futureTask"][0][key]} onClick={openTaskEditor} class="offset">Edit</button></td>}
             <td><button id={description["futureTask"][0][key]} onClick={openTaskUpdater("futureTaskID")} class="offset">Update</button></td>
@@ -242,6 +324,7 @@ function TaskViewer(props) {
     listItemsUrgent = Object.keys(description["urgentTask"][0]).map((key, index) => (
         <tr>
             <td class="tick"><label id={description["urgentTask"][0][key]}>{key}</label></td>
+            <td><button id={description["urgentTask"][0][key]} onClick={openTaskView} class="offset">View</button></td>
             {/* style={{ color: pop[description[key]][0] == "medium" ? "orange" : pop[description[key]][0] == "high" ? "red" : "green" }} */}
             {props.cTask && <td><button id={description["urgentTask"][0][key]} onClick={openTaskEditor} class="offset">Edit</button></td>}
             <td><button id={description["urgentTask"][0][key]} onClick={openTaskUpdater("urgentTaskID")} class="offset">Update</button></td>
@@ -302,6 +385,18 @@ function TaskViewer(props) {
                                         </tr>
                                     </thead>
                                     {listItemsFuture}
+                                </table>
+                            </Panel>
+                            <Panel title="Completed">
+                                <table style={{ width: "600px", marginLeft: "-1.5%" }} class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Task</th>
+                                            <th>Option</th>
+                                            <th>Priority</th>
+                                        </tr>
+                                    </thead>
+                                    {listItemsCompleted}
                                 </table>
                             </Panel>
                         </PanelGroup>

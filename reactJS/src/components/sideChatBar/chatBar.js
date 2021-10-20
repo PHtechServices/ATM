@@ -1,9 +1,10 @@
 import "./chatBar.scss"
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import MyProfile from "../profile/profile";
+import axios from "axios";
 
-function ChatBar(props) {
+function ChatBar(props) {  
   const viewProfile = (e) => {
     ReactDOM.render(
       <React.StrictMode>
@@ -12,6 +13,7 @@ function ChatBar(props) {
       </React.StrictMode>,
       document.getElementById('dLogin'));
   }
+
   return (
     <div>
       <div class="feed-identity-module
@@ -44,7 +46,7 @@ function ChatBar(props) {
                     <div class="text-align-left">
                       <div id="ember218" class="ember-view t-12 t-black--light t-bold mr2" style={{ color: "rgb(0, 0, 0)"}}>
                       <span>Tasks Completed till now:</span>&nbsp;&nbsp;<span class="feed-identity-widget-item__stat" style={{ color: "#9c9b9b"}}>
-                        10
+                        {props.completedTasksLength}
                       </span>  </div>
                     </div>
                   </div>
@@ -55,7 +57,7 @@ function ChatBar(props) {
                     <div class="text-align-left">
                       <div id="ember221" class="ember-view t-12 t-black--light t-bold mr2" style={{ color: "rgb(0, 0, 0)"}}>
                         <span>Taks to be Completed:</span>&nbsp;&nbsp;<span class="feed-identity-widget-item__stat" style={{ color: "#9c9b9b"}}>
-                       15
+                       {props.incompleteTasks}
                       </span>  </div>
                     </div>
                   </div>

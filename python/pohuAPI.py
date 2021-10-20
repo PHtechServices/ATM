@@ -12,30 +12,49 @@ import datetime
 app = Flask(__name__)
 CORS(app)
 
+@app.route("/login",methods=['POST'])
+def loginUser():
+    details=request.get_json()["userDetails"]
+    userName=details["userName"]
+    password=details["password"]
+    isParent=details["isParent"]
+    response, uName, mailId,stdId,role,designation  =checkforLogin(userName,password,isParent)
+    if(response=="Teacher"):
+        return jsonify({"message": "Congratualtion for Login",
+                          "uName": uName,
+                          "mailID": mailId,
+                           "role": role,
+                           "stdId":"none",
+                           "designation": designation}  )
+    if(response=="Parent"):
+        return jsonify({"message": "Congratualtion for Login",
+                          "uName": uName,
+                          "stdId": stdId,
+                           })
 
-@app.route("/login", methods=['POST'])
-def loginTest():
-    details = request.get_json()["userDetails"]
-    userName, uName, mailID, designation = userNameCheck(details["userName"])
-    passwordN = passwordCheck(details["password"])
-    role = fetchrole(mailID[0])
-    if userName == "Success":
-        if passwordN == "Success":
-            return jsonify({"message": "Congratualtion for Login",
-                            "uName": uName[-1],
-                            "mailID": mailID,
-                            "role": role,
-                            "designation": designation})
-        else:
-            return jsonify({"message": "UserName or Password is Incorrect",
-                            "uName": "Not Defined",
-                            "mailID": "Not Defined",
-                            "role": "Not Defined"})
-    else:
-        return jsonify({"message": "UserName or Password is Incorrect",
-                        "uName": "Not Defined",
-                        "mailID": "Not Defined",
-                        "role": "Not Defined"})
+# @app.route("/login", methods=['POST'])
+# def loginTest():
+#     details = request.get_json()["userDetails"]
+#     userName, uName, mailID, designation = userNameCheck(details["userName"])
+#     passwordN = passwordCheck(details["password"])
+#     role = fetchrole(mailID[0])
+#     if userName == "Success":
+#         if passwordN == "Success":
+#             return jsonify({"message": "Congratualtion for Login",
+#                             "uName": uName[-1],
+#                             "mailID": mailID,
+#                             "role": role,
+#                             "designation": designation})
+#         else:
+#             return jsonify({"message": "UserName or Password is Incorrect",
+#                             "uName": "Not Defined",
+#                             "mailID": "Not Defined",
+#                             "role": "Not Defined"})
+#     else:
+#         return jsonify({"message": "UserName or Password is Incorrect",
+#                         "uName": "Not Defined",
+#                         "mailID": "Not Defined",
+#                         "role": "Not Defined"})
 
 
 @app.route("/createuser", methods=['POST'])
@@ -101,6 +120,15 @@ def task_assign():
     populator["backlogTaskID"]=[{'Nothing To Display':"message"}] if len(backlogTaskID)==0 else backlogTaskID
     return jsonify({"message": "tasks are assigned", "data": data, "ass":assignee["assigned"], "populator":populator})
 
+@app.route("/taskToBeApproved", methods=['POST'])
+def task_to_be_approved():
+    assignee = request.get_json()
+    toBeApprovedTasks, toBeApprovedTaskID= task_approved(assignee["assigned"])
+    data = {}
+    populator = {}
+    data["toBeApprovedTask"]=[{'Nothing To Display':"message"}] if len(toBeApprovedTasks)==0 else toBeApprovedTasks
+    populator["toBeApprovedTaskID"]=[{'Nothing To Display':"message"}] if len(toBeApprovedTaskID)==0 else toBeApprovedTaskID
+    return jsonify({"message": "tasks are assigned", "data": data, "ass":assignee["assigned"], "populator":populator})
 
 @app.route("/taskapprove", methods=['POST'])
 def taskapproved():
@@ -166,6 +194,7 @@ def checkmailfortaskupdate():
     x = request.get_json()
     js = x["data"]
     objid = x["objid"]
+    key1 = x["key"]
     print(objid)
     temp = {}
     ct = str(datetime.datetime.now().date())
@@ -175,9 +204,9 @@ def checkmailfortaskupdate():
             for key, value in a.items():
                 if key not in ["_id"]:
                     temp[key]=value
-            old = copy.deepcopy(temp)
+            old = copy.deepcopy(temp);
             new = copy.deepcopy(temp)
-            new["task updates"].append(js)
+            new[key1].append(js)
             edit = config.collection1.replace_one(old,new)
             return ("Success")
 
@@ -333,5 +362,27 @@ def teachersJson():
     else:
         final=jsonify({"message":"Data Retrived Sucessfully","data" : data1})
     return final
+
+@app.route("/studyCentral",methods=["POST"])
+def SC():
+    req_data = request.get_json()
+    config.collectionSC.insert_one(req_data).inserted_id
+    return jsonify({"message":"data inserted into Class1 collection."}) 
+
+@app.route("/broadcast", methods=["POST"])
+def broadcast_notice():
+    data = request.get_json()
+    print(data)
+    config.broadcast.insert_one(data).inserted_id
+    return jsonify({"message":"data inserted into broadcast collection.","data":repr(data)})
+
+@app.route("/getBroadcast", methods=["GET"])
+def get():
+    l1 = []
+    for i in config.broadcast.find():
+        data = i
+        data["_id"] = str(data["_id"])
+        l1.append(data)
+    return jsonify({"message":"broadcast  Data Retrived Successfully","data":l1})
 
 app.run(debug=True, port=5000, host="0.0.0.0")

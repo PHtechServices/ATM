@@ -11,23 +11,45 @@ from uuid import uuid4
 import numpy as np
 import datetime
 
-
-def userNameCheck(userName):
-    uName = []
-    mailID = []
+def checkforLogin(userName,password,isParent):
+    uName=[]
+    mailID=[]
+    stdId=[]
+    role=[]
     designation = []
-    for doc in config.collection.find():
-        if userName == doc["primaryEmail"]:
-            uName.append(doc["name"]["givenName"])
-            mailID.append(doc["primaryEmail"])
-            designation.append(doc["organizations"][0]["title"])
-            return("Success", uName, mailID, designation)
+    shaPass=sha(password)
+    print("process started")
+    if(isParent!="1"):
+        for doc in config.collection.find():
+            if(userName==doc["primaryEmail"] and shaPass==doc["password"]):
+                uName.append(doc["name"]["givenName"])
+                mailID.append(doc["primaryEmail"])
+                role.append(doc["organizations"][0]["title"])
+                designation.append(doc["organizations"][0]["title"])
+                return("Teacher",uName,mailID,None,role,designation)
+    else:
+        for doc in config.parentCollection.find():
+            if(userName==doc["phoneno"] and password==doc["password"]):
+                print("yess")
+                uName.append(doc["name"])
+                stdId.append(doc["studentid"])
+                return("Parent",uName,None,stdId,None,None)
+# def userNameCheck(userName):
+#     uName = []
+#     mailID = []
+#     designation = []
+#     for doc in config.collection.find():
+#         if userName == doc["primaryEmail"]:
+#             uName.append(doc["name"]["givenName"])
+#             mailID.append(doc["primaryEmail"])
+#             designation.append(doc["organizations"][0]["title"])
+#             return("Success", uName, mailID, designation)
 
 
-def passwordCheck(password):
-    for doc in config.collection.find():
-        if sha(password) == doc["password"]:
-            return("Success")
+# def passwordCheck(password):
+#     for doc in config.collection.find():
+#         if sha(password) == doc["password"]:
+#             return("Success")
 
 
 def task_assigned(assigned):
@@ -90,6 +112,22 @@ def task_assigned(assigned):
 
 
     return (activeTask, urgentTask, futureTask, completedTask, backlogTask, activeTaskID, urgentTaskID, futureTaskID, completedTaskID, backlogTaskID)
+
+def task_approved(assigned):
+    dataActive = {}
+    idActive = {}
+    activeTask = []
+    activeTaskID = []
+    for doc in config.collection1.find():
+        if assigned == doc["task assigned by"] and "Task Completed Successfully" == doc["task status"]:
+            dataActive[doc["task description"]] = str(doc["_id"])
+            idActive[str(doc["_id"])] = [doc["task priority"], doc["task assigned by"],
+                                    doc["task assigned to"], doc["task description"]]
+            activeTask.append(dataActive)
+            activeTaskID.append(idActive)
+
+
+    return (activeTask, activeTaskID)
 
 
 def task_approver(approver):
