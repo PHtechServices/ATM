@@ -16,6 +16,9 @@ import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 import TemporaryDrawer from '../notifications/notifications';
 import TaskProfile from '../taskProfile/taskProfile';
 import InsertCentral from '../studyCentral/studyCentral';
+import AttendanceComponent from '../studyCentral/viewSC';
+import CalenderComponent from '../googleAuth/calender';
+import StudyCentralHome from '../studyCentral/studyCentralHome';
 
 
 function MenuButtons(props) {
@@ -51,41 +54,27 @@ function MenuButtons(props) {
   const clickLogo = (e) => {
     ReactDOM.render(
       <React.StrictMode>
-        <HomeScreen name={props.name} />
-      </React.StrictMode>,
-      document.getElementById('dLogin')
-    );
-  }
-
-  const viewTP = (e) => {
-    ReactDOM.render(
-      <React.StrictMode>
-        <TaskProfile />
+        <HomeScreen name={props.name} mail={props.mail} />
       </React.StrictMode>,
       document.getElementById('dLogin')
     );
   }
 
   const insertCentral = (e) => {
-    var config = {
-      method: 'GET',
-      url: 'http://127.0.0.1:5000/classInfo',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    };
-
-    axios(config)
-      .then(response => {
-        var classInfo = response.data["xx"]
-        var subjectInfo = response.data["yy"] 
         ReactDOM.render(
           <React.StrictMode>
-            <InsertCentral classInfo={classInfo} subjectInfo={subjectInfo} />
+            <StudyCentralHome />
           </React.StrictMode>,
           document.getElementById('dLogin')
         );      
-})
+  }
+  const calender=(e)=>{
+    ReactDOM.render(
+      <React.StrictMode>
+        <CalenderComponent />
+      </React.StrictMode>,
+      document.getElementById('dLogin')
+    ); 
   }
 
 
@@ -110,7 +99,7 @@ function MenuButtons(props) {
         var pop = response.data["populator"]
           ReactDOM.render(
             <React.StrictMode>
-              <TaskViewer msg={response.data["message"]} it={description} pop={pop} const mail={props.mail} cTask={props.cTask} />
+              <TaskViewer msg={response.data["message"]} it={description} id={props.id} pop={pop} const mail={props.mail} cTask={props.cTask} />
             </React.StrictMode>,
             document.getElementById('dLogin'));
       })
@@ -119,22 +108,28 @@ function MenuButtons(props) {
 
   return (
     <nav class="navbar navbar-expand-sm navbar-expand-xl bg-dark navbar-dark">
-      <a class="navbar-brand" href="#" onClick={clickLogo}><h6>ATM - At The Moment</h6></a>
-      <ul class="navbar-nav pl-xl-5 pr-xl-5 pl-sm-1 pr-sm-1">
-
+      <a class="navbar-brand" href="#" onClick={clickLogo}><img src="http://srishtiworldschool.in/images/logo.png" style={{width:"20%"}}></img></a>
+      <ul class="navbar-nav pl-xl-5 pr-xl-5 pl-sm-1 pr-sm-1" style={{marginLeft:"-39%"}}>
+      
         <li class="nav-item mr-xl-3 mr-sm-3">
           <a class="nav-link" href="#" onClick={viewTasks}><h6>My Tasks</h6></a>
         </li>
         <li class="nav-item mr-xl-3 mr-sm-3">
           <a class="nav-link" href="#" onClick={viewProfile}><h6>My Profile</h6></a>
         </li>
-        <li class="nav-item mr-xl-3 mr-sm-3">
-          <a class="nav-link" href="#" onClick={viewTP}><h6>Test Page</h6></a>
-        </li>
-        <li class="nav-item mr-xl-3 mr-sm-3">
+        {props.cTask && props.cUser && <li class="nav-item mr-xl-3 mr-sm-3">
           <a class="nav-link" href="#" onClick={insertCentral}><h6>Study Central</h6></a>
+        </li>}
+        <li class="nav-item mr-xl-3 mr-sm-3">
+          <a class="nav-link" href="#" onClick={calender}><h6>Calender</h6></a>
         </li>
-        <TemporaryDrawer />
+        
+      </ul>
+      <ul  class="navbar-nav pl-xl-5 pr-xl-5 pl-sm-1 pr-sm-1" style={{marginLeft:"35%"}}>
+      <li class="nav-item mr-xl-3 mr-sm-3">
+        <a class="navbar-brand" href="#" onClick={clickLogo}><h6>ATM - At The Moment</h6></a>
+        </li>
+      <TemporaryDrawer />
         
       </ul>
     </nav>

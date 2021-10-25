@@ -94,11 +94,12 @@ def task():
 def meeting():
     data= []
     req_data = request.get_json()
+    print(req_data)
     req_data = req_data["data"]
     for i in req_data["attendees"]:
         data.append(getEmail(i))
-    data = createMeeting(req_data,data)
-    config.collectionMeetings.insert_one(data).inserted_id
+    data1 = createMeeting(req_data,data)
+    config.collectionMeetings.insert_one(data1).inserted_id
     return jsonify({"message": "Meeting created Sucessfully..."})
 
 
@@ -384,5 +385,34 @@ def get():
         data["_id"] = str(data["_id"])
         l1.append(data)
     return jsonify({"message":"broadcast  Data Retrived Successfully","data":l1})
+
+@app.route("/employeeProfile",methods=["POST"])
+def ep():
+    data = request.get_json()
+    print(data)
+    mail,designation,staffType = taskProfile(data["obj"])
+    ct, subjects, repMgr, reprMgrName= getInfo(mail)
+    return jsonify({"message":"Employee Information Retrived","MailID":mail,"Reporting Manager Name":reprMgrName,"Designation":designation,"Staff Type":staffType})
+
+@app.route("/filter2", methods=["POST"])
+def a_filter2():
+    req_data = request.get_json()
+    cc=req_data["data"]["cc"]
+    date=req_data["data"]["date"]
+    sub=req_data["data"]["sub"]
+    data1 = attendacne_filter(cc, sub, date)
+    print(data1)
+    return jsonify({"message":"Data Retrived Sucessfully","data" : data1})
+
+@app.route("/marksfilter", methods=["POST"])
+def m_filter():
+    req_data = request.get_json()
+    cc=req_data["data"]["cc"]
+    date=req_data["data"]["date"]
+    sub=req_data["data"]["sub"]
+    data1 = marks_filter(cc, sub, date)
+    print(data1)
+    return jsonify({"message":"Data Retrived Sucessfully","data" : data1})
+
 
 app.run(debug=True, port=5000, host="0.0.0.0")

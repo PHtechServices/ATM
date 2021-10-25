@@ -1,6 +1,5 @@
 import React from 'react';
 import "./taskViewer.scss"
-import CalendarAPI from '../googleAuth/calendar';
 import UpdateTasks from '../updateTasks/updateTasks';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
@@ -117,6 +116,7 @@ function TaskViewer(props) {
     const [colorTaskUpdated, setColorUpdated] = useState("")
     const pop = props.pop
 
+
     const openTaskView = (e) => {
         var inputPlaceholder = []
 
@@ -180,11 +180,31 @@ function TaskViewer(props) {
                       else  {
                         status="Rejected"
                       }
-                    ReactDOM.render(
-                        <React.StrictMode>
-                            <TaskProfile status={status} title={title} id={e.target.id} mail={props.mail} inputPlaceholder={inputPlaceholder}/>
-                        </React.StrictMode>,
-                        document.getElementById('dLogin'));
+
+                      var data = JSON.stringify({
+                        "obj": "6151c258f21398f5647f8e9a"
+                      });
+
+                      var config = {
+                        method: 'post',
+                        url: 'http://localhost:5000/employeeProfile',
+                        headers: { 
+                          'Content-Type': 'application/json'
+                        },
+                        data : data
+                      };
+                      
+                      axios(config)
+                .then(response =>  {
+                        const info = response.data;
+                        ReactDOM.render(
+                            <React.StrictMode>
+                                <TaskProfile info={info} status={status} title={title} id={e.target.id} mail={props.mail} inputPlaceholder={inputPlaceholder}/>
+                            </React.StrictMode>,
+                            document.getElementById('dLogin'));
+                      })
+
+                    
                     });
                     
                 })
@@ -283,7 +303,7 @@ function TaskViewer(props) {
             <td class="tick"><label id={description[key]}>{key}</label></td>
             <td><button id={description["activeTask"][0][key]} onClick={openTaskView} class="offset">View</button></td>
             {props.cTask && <td><button id={description["activeTask"][0][key]} onClick={openTaskEditor} class="offset">Edit</button></td>}
-            <td><button id={description["activeTask"][0][key]} onClick={openTaskUpdater("activeTaskID")} class="offset">Update</button></td>
+            {/* <td><button id={description["activeTask"][0][key]} onClick={openTaskUpdater("activeTaskID")} class="offset">Update</button></td> */}
         </tr>
     ))
 
@@ -294,7 +314,7 @@ function TaskViewer(props) {
             <td><button id={description["backlogTask"][0][key]} onClick={openTaskView} class="offset">View</button></td>
             {/* style={{ color: pop[description[key]][0] == "medium" ? "orange" : pop[description[key]][0] == "high" ? "red" : "green" }} */}
             {props.cTask && <td><button id={description["backlogTask"][0][key]} onClick={openTaskEditor} class="offset">Edit</button></td>}
-            <td><button id={description["backlogTask"][0][key]} onClick={openTaskUpdater("backlogTaskID")} class="offset">Update</button></td>
+            {/* <td><button id={description["backlogTask"][0][key]} onClick={openTaskUpdater("backlogTaskID")} class="offset">Update</button></td> */}
         </tr>
     ))
 
@@ -305,7 +325,7 @@ function TaskViewer(props) {
             <td><button id={description["completedTask"][0][key]} onClick={openTaskView} class="offset">View</button></td>
             {/* style={{ color: pop[description[key]][0] == "medium" ? "orange" : pop[description[key]][0] == "high" ? "red" : "green" }} */}
             {props.cTask && <td><button id={description["completedTask"][0][key]} onClick={openTaskEditor} class="offset">Edit</button></td>}
-            <td><button id={description["completedTask"][0][key]} onClick={openTaskUpdater("completedTaskID")} class="offset">Update</button></td>
+            {/* <td><button id={description["completedTask"][0][key]} onClick={openTaskUpdater("completedTaskID")} class="offset">Update</button></td> */}
         </tr>
     ))
 
@@ -316,7 +336,7 @@ function TaskViewer(props) {
             <td><button id={description["futureTask"][0][key]} onClick={openTaskView} class="offset">View</button></td>
             {/* style={{ color: pop[description[key]][0] == "medium" ? "orange" : pop[description[key]][0] == "high" ? "red" : "green" }} */}
             {props.cTask && <td><button id={description["futureTask"][0][key]} onClick={openTaskEditor} class="offset">Edit</button></td>}
-            <td><button id={description["futureTask"][0][key]} onClick={openTaskUpdater("futureTaskID")} class="offset">Update</button></td>
+            {/* <td><button id={description["futureTask"][0][key]} onClick={openTaskUpdater("futureTaskID")} class="offset">Update</button></td> */}
         </tr>
     ))
 
@@ -327,7 +347,7 @@ function TaskViewer(props) {
             <td><button id={description["urgentTask"][0][key]} onClick={openTaskView} class="offset">View</button></td>
             {/* style={{ color: pop[description[key]][0] == "medium" ? "orange" : pop[description[key]][0] == "high" ? "red" : "green" }} */}
             {props.cTask && <td><button id={description["urgentTask"][0][key]} onClick={openTaskEditor} class="offset">Edit</button></td>}
-            <td><button id={description["urgentTask"][0][key]} onClick={openTaskUpdater("urgentTaskID")} class="offset">Update</button></td>
+            {/* <td><button id={description["urgentTask"][0][key]} onClick={openTaskUpdater("urgentTaskID")} class="offset">Update</button></td> */}
         </tr>
     ))
 

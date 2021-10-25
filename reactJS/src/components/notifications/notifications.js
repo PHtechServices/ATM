@@ -43,6 +43,7 @@ export default function TemporaryDrawer() {
             <ListItemText primary={"This is Dummy Notification 2"} />
           </ListItem>
       </List>
+      
     </Box>
   );
 
@@ -50,7 +51,7 @@ export default function TemporaryDrawer() {
     <div>
       {['top'].map((anchor) => (
         <React.Fragment key={anchor}>
-          <a onClick={toggleDrawer(anchor, true)}><CircleNotificationsIcon sx={{ color: 'white', marginTop:"25%", marginLeft:"3200%" }}/></a>
+          <a onClick={toggleDrawer(anchor, true)}><CircleNotificationsIcon sx={{ color: 'white', marginTop:"25%", marginRight:"5%" }}/></a>
           {/* <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button> */}
           <Drawer
             anchor={anchor}

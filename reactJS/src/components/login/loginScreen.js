@@ -7,7 +7,6 @@ import HomeScreen from '../home/homeScreen';
 import MenuButtons from '../home/menuButtons';
 import Notices from '../rightSideBar/notices';
 import ChatBar from '../sideChatBar/chatBar';
-import CalendarAPI from '../googleAuth/calendar';
 
 function Login() {
   const [userName, setUserName] = useState("");
@@ -45,15 +44,15 @@ function Login() {
         var status = response.data.message
         const dd = response.data.uName
         var mail = response.data.mailID[0]
-        var role = response.data.role
+        var role = response.data.role[0]
         var designation = response.data.designation
         let cTask = true
         let cUser = true
-        if (role === "SA" || role === "A") {
+        if (role === "dean" || role === "director" || role === "principal" || role === "vicePrincipal") {
           cTask = true
           cUser = true
         }
-        else if (role === "W") {
+        else if (role === "studentCoordinator" || role === "teacherCoordinator") {
           cTask = true
           cUser = false
         }
@@ -65,7 +64,7 @@ function Login() {
         if (status === "UserName or Password is Incorrect") {
           ReactDOM.render(
             <React.StrictMode>
-              <HomeScreen name={dd} mail={mail} designation={designation} />
+              <HomeScreen name={dd} mail={mail} designation={designation}/>
             </React.StrictMode>,
             document.getElementById('dLogin'));
         }
@@ -144,7 +143,7 @@ function Login() {
                 document.getElementById('dLogin'));
               ReactDOM.render(
                 <React.StrictMode>
-                  <Notices mail={mail} name={dd} />
+                  <Notices mail={mail} name={dd} cTask={cTask} cUser={cUser} />
                 </React.StrictMode>,
                 document.getElementById('notices'));
 

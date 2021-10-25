@@ -31,6 +31,11 @@ function Notices(props) {
   const [open, setOpen] = React.useState(false);
   const [message, setMessage] = React.useState("");
   const [messageList, setMessageList] = React.useState("");
+  const [seen, setSeen] = React.useState(false)
+
+  const togglePop = (e) => {
+    setSeen(!seen)
+   };
 
   const toBeApproved = (e) => {
     const mail = props.mail
@@ -69,13 +74,22 @@ function Notices(props) {
     setOpen(false);
   };
 
-  const actions = [
-    { icon: <AddTaskIcon />, name: 'Create Task', operation: 'task' },
-    { icon: <PersonAddIcon />, name: 'Create User', operation: 'user' },
-    { icon: <MeetingRoomIcon />, name: 'Schedule Meetings', operation: 'meeting' },
-    { icon: <ClassIcon />, name: 'Assign Classes', operation: 'classes' },
-    { icon: <AddAlertIcon />, name: 'Broadcast Message', operation: 'broadcast' }
-  ];
+  let actions
+
+  if (props.cTask && props.cUser) {
+    actions = [
+      { icon: <AddTaskIcon />, name: 'Create Task', operation: 'task' },
+      { icon: <PersonAddIcon />, name: 'Create User', operation: 'user' },
+      { icon: <MeetingRoomIcon />, name: 'Schedule Meetings', operation: 'meeting' },
+      { icon: <ClassIcon />, name: 'Assign Classes', operation: 'classes' },
+      { icon: <AddAlertIcon />, name: 'Broadcast Message', operation: 'broadcast' }
+    ];
+  }
+  else {
+    actions = [
+      { icon: <MeetingRoomIcon />, name: 'Schedule Meetings', operation: 'meeting' },
+    ];
+  }
   const openProcesses = (e, operation) => {
     e.preventDefault();
     if (operation == "task") {
@@ -178,9 +192,11 @@ function Notices(props) {
       <button class="draw meet overall" style={{ width: "58%", maxHeight: "15%", marginTop: "-20%", marginLeft: "-15%" }} onClick={getNotifications}>Circulars</button>
       <button class="draw meet overall" style={{ width: "58%", maxHeight: "15%", marginTop: "-20%", marginLeft: "50%" }} onClick={toBeApproved}>Approvals</button>
       {/* <h6 style={{width:"100%", fontSize:"12px", marginLeft:"-25%", textDecoration:"underline"}}>Notices and Announcements</h6> */}
-      <div style={{ marginTop: "40%" }}>
+      <Paper style={{maxHeight: 200, overflow: 'auto', height: 217,width: 285,position: "absolute",marginBottom: "10%",marginLeft: "-30%"}}>
+      <div style={{ marginTop: "1%",marginLeft:"30%" }}>
         {messageList}
       </div>
+      </Paper>
       <Box
         sx={{
           display: 'flex',
@@ -194,15 +210,13 @@ function Notices(props) {
           },
         }}
       >
-        <Paper elevation={3} >
-          <Typography sx={{ fontSize: 15, textAlign: "center" }} color="text.primary" gutterBottom>
-            This Week
-          </Typography>
-        </Paper>
 
       </Box>
-      <Button variant="outlined" sx={{ position: "absolute", marginTop: 15, marginLeft: 5 }}>View Calendar</Button>
-      <Box sx={{ height: 320, transform: 'translateZ(0px)', flexGrow: 1 }}>
+      
+      <Box>
+      <iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&bgcolor=%23ffffff&ctz=Asia%2FKolkata&showTitle=0&showPrint=0&showTabs=0&showTz=0&showCalendars=0&src=cG9odWxhYnNAc3Jpc2h0aXdvcmxkc2Nob29scy5pbg&src=YWRkcmVzc2Jvb2sjY29udGFjdHNAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&src=ZW4tZ2IuaW5kaWFuI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&color=%23039BE5&color=%2333B679&color=%230B8043" style={{border: 0,position:"absolute",marginTop:220,marginLeft:"-29%"}} width="300" height="300" frameborder="0" scrolling="no"></iframe>
+      </Box>
+      <Box sx={{ height: 320, transform: 'translateZ(0px)', flexGrow: 1,marginTop:50}}>
         <SpeedDial
           ariaLabel="SpeedDial basic example"
           sx={{ position: 'absolute', bottom: 100, right: -100 }}

@@ -11,6 +11,8 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import NewsComponent from '../newsfeed/NewsFeed';
+import { Alert } from '@mui/material';
 
 function HomeScreen(props) {
 
@@ -44,6 +46,34 @@ function HomeScreen(props) {
   const min = 0;
   const max = quotes.length;
   const rand = Math.round(min + Math.random() * (max - min));
+
+  const viewTasks = (e) => {
+    const mail = props.mail
+    const data = JSON.stringify({
+      "assigned": mail
+    });
+
+    var config = {
+      method: 'POST',
+      url: 'http://127.0.0.1:5000/taskassign',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+
+    axios(config)
+      .then(response => {
+        var description = response.data["data"]
+        var pop = response.data["populator"]
+          ReactDOM.render(
+            <React.StrictMode>
+              <TaskViewer msg={response.data["message"]} it={description} pop={pop} const mail={props.mail} cTask={props.cTask} />
+            </React.StrictMode>,
+            document.getElementById('dLogin'));
+      })
+
+  }
 
   const getWish = () => {
     var today = new Date()
@@ -83,10 +113,14 @@ function HomeScreen(props) {
                 </Typography>
               </CardContent>
             </Card>
+            <Box>
+              <NewsComponent></NewsComponent>
+            </Box>
+            <Button color="secondary" style={{marginTop:"5%"}} onClick={viewTasks}>View Tasks</Button>
           </div>
         </div>
       </main>
-
+      {props.alert && <Alert severity="success">This is a success alert — check it out!</Alert>}
     </div>
   );
 }

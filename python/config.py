@@ -36,6 +36,31 @@ collectionClassInfo = db.ClassInfo
 collectionTeacherAssignments = db.teacherAssignments
 collectionMeetings = db.meetings
 broadcast = db.broadcast
+report = client.atendancereport
+class1 = report.class1
+class2 = report.class2
+class3 = report.class3
+class4 = report.class4
+class5 = report.class5
+class6 = report.class6
+class7 = report.class7
+class8 = report.class8
+class9 = report.class9
+class10 = report.class10
+lkg = report.L.K.G
+marks = client.marksreport
+class1M = marks.class1
+class2M = marks.class2
+class3M = marks.class3
+class4M = marks.class4
+class5M = marks.class5
+class6M = marks.class6
+class7M = marks.class7
+class8M = marks.class8
+class9M = marks.class9
+class10M = marks.class10
+lkgM = marks.L.K.G
+
 
 eventTemplate = {
         'summary': 'Google I/O 2015',

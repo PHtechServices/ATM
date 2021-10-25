@@ -4,6 +4,9 @@ import React from 'react';
 import "./taskCategorization.css"
 import axios from 'axios';
 import HomeScreen from '../home/homeScreen';
+import { Alert } from '@mui/material';
+import CreateTask from './createTask';
+import Delayed from '../Delay/delay';
 
 function TaskCategorization(props) {
 
@@ -11,6 +14,7 @@ function TaskCategorization(props) {
     const [taskDepartment, setTaskDepartment] = useState("");
     const [taskNature, setTaskNature] = useState("");
     const [resItems, setResItems] = useState("");
+    const [alert, setAlert] = useState(false)
 
     const staff = props.staffType
     const transferrableData = props.transferrableData
@@ -38,7 +42,8 @@ function TaskCategorization(props) {
         transferrableData["task responsibility"] = taskResponsibility
         transferrableData["task department"] = taskDepartment
         transferrableData["task nature"] = taskNature
-        transferrableData["task updates"] = ""
+        transferrableData["task updates"] = []
+        transferrableData["ManagerComments"] = []
         console.log(transferrableData)
         const data = JSON.stringify(
             transferrableData
@@ -58,11 +63,12 @@ function TaskCategorization(props) {
                 console.log(staffList)
 
             })
-            ReactDOM.render(
-                <React.StrictMode>
-                  <HomeScreen name={props.name} />
-                </React.StrictMode>,
-                document.getElementById('dLogin'));
+        setAlert(true)
+        ReactDOM.render(
+            <React.StrictMode>
+                <Alert severity="success" style={{ fontSize: "20px", height: "60px", width: "80%", marginLeft: "-50%" }} onClose={() => { }}>Task Created Successfully</Alert>
+            </React.StrictMode>,
+            document.getElementById('dLogin'));
     }
 
     const onSubmitClick = (e) => {
@@ -120,7 +126,7 @@ function TaskCategorization(props) {
                     <p>Upload Reference Document</p><br />
                     <p></p>
                     <input type="file" id="myFile" name="filename" />
-                    <input type="button" name="next" class="next action-button" value="Submit" onClick={submitForm}/>
+                    <input type="button" name="next" class="next action-button" value="Submit" onClick={submitForm} />
                 </fieldset>
             </form>
         </div>

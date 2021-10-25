@@ -326,6 +326,20 @@ def getAllComments(id):
             break
     return comments
 
+def taskProfile(obj):
+    for i in config.collection.find():
+        if ObjectId(obj) == i["_id"]:
+            data = i
+            data["_id"]= str(data["_id"])
+            mail = data["primaryEmail"]
+            print(mail)
+            designation = data["organizations"][0]["title"]
+            if designation in ["classTeacher","teacher","teacherCoordinator", "subCoordinator"]:
+                staffType = "Teaching"
+            else:
+                staffType = "Non-Teaching"
+    return mail,designation,staffType
+
 
 def getInfo(mail):
     for x in config.collection.find():
@@ -367,18 +381,38 @@ def qrsearch(test):
         if test == i["QR"]["qrid"]:
             return i["QR"]
 
-def attendacne_filter(cc, date, st, et, sub):
+# def attendacne_filter(cc, date, st, et, sub):
+#     class_collection = []
+#     class_collection.append([config.class1,config.class2,config.class3,config.class4,config.class5,
+#     config.class6,config.class7,config.class8,config.class9,config.class10,config.nursery,config.lkg,config.ukg])
+#     for i in class_collection[0]:
+#         for j in i.find():
+#             if cc == j['class'] and sub == j['subject'] and date == j['Date'] and st == j["Time"]["starttime"] and et == j["Time"]["endtime"]:
+#                 data =  list(i.find())
+#                 print (data)
+#                 return data
+#             else:
+#                 print("NO records available")]
+
+def attendacne_filter(cc, sub,date):
     class_collection = []
-    class_collection.append([config.class1,config.class2,config.class3,config.class4,config.class5,
-    config.class6,config.class7,config.class8,config.class9,config.class10,config.nursery,config.lkg,config.ukg])
+    class_collection.append([config.class1,config.class2,config.class3,config.class4,config.class5,config.class6,config.class7,config.class8,config.class9,config.class10,config.lkg])
     for i in class_collection[0]:
         for j in i.find():
-            if cc == j['class'] and sub == j['subject'] and date == j['Date'] and st == j["Time"]["starttime"] and et == j["Time"]["endtime"]:
-                data =  list(i.find())
-                print (data)
-                return data
-            else:
-                print("NO records available")
+            if cc == j['class'] and sub == j['subject'] and date == j['Date']:
+                data=j
+                data["_id"]=str(data["_id"])
+                return data["attendance"]
+
+def marks_filter(cc, sub,date):
+    class_collection1 = []
+    class_collection1.append([config.class1M,config.class2M,config.class3M,config.class4M,config.class5M,config.class6M,config.class7M,config.class8M,config.class9M,config.class10M,config.lkgM]) 
+    for i in class_collection1[0]:
+        for j in i.find():
+            if cc == j['class'] and sub == j['subject'] and date == j['Date']:
+                data=j
+                data["_id"]=str(data["_id"])
+                return data["attendance"]
 
 def getLoginJson(mail,date,sub,cls):
     for j in config.teachers.find():

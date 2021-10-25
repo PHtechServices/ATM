@@ -22,6 +22,8 @@ import AddAlertIcon from '@mui/icons-material/AddAlert';
 import axios from 'axios';
 import ReactDOM from 'react-dom';
 import TaskViewer from '../taskView/tasksViewer';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 
 export default function TaskProfile(props) {
@@ -29,6 +31,8 @@ export default function TaskProfile(props) {
   const actions = [
     { icon: <AddAlertIcon />, name: 'Reject Task', operation: 'reject' }
   ];
+  const [com, setCom] = useState()
+
   const steps = [
     {
       label: 'Task Created'
@@ -47,6 +51,7 @@ export default function TaskProfile(props) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [comments, setComments] = React.useState(false);
+  const [comments2, setComments2] = React.useState("");
   const [clearPaper, setClearPaper] = React.useState(true);
   const [showMessage, setShowMessage] = React.useState(false);
   let selectedHigh = false
@@ -233,6 +238,34 @@ export default function TaskProfile(props) {
       })
 
   }
+  useEffect(() => {
+    const id = props.id
+    const data = JSON.stringify({
+        "id": id
+    });
+
+    var config = {
+        method: 'POST',
+        url: 'http://127.0.0.1:5000/getComments',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: data
+    };
+
+    axios(config)
+        .then(response => {
+            let comments10 = response.data["comments"]
+            console.log(comments10)
+            if (comments10.length != 0) {
+                setCom(comments10.map((item) =>
+                    Object.keys(item).map((key, index) => (
+                    <Typography variant="body2" gutterBottom>{item[key]}</Typography>)))
+                );
+            }
+
+        })
+});
 
   const changeStatus = (e) => {
     let messages = ""
@@ -311,6 +344,30 @@ export default function TaskProfile(props) {
     setOpen(true);
   };
 
+  const getComments2 = (e) => {
+    setComments2(e.target.value)
+}
+  const storeUpdates = () => {
+    const data = JSON.stringify({
+      "data": { "comments": comments2 },
+      "objid": props.id,
+      "key": "task updates"
+  }
+  );
+
+  var config = {
+      method: 'POST',
+      url: 'http://127.0.0.1:5000/updateComments',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      data: data
+  };
+  axios(config)
+      .then(response => {
+      })
+  }
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -336,14 +393,14 @@ export default function TaskProfile(props) {
           </Box>
           <Box style={{ position: "absolute", marginTop: "50%", marginLeft: "8%", textAlign: "center", textAlign: "left" }}>
             <Typography variant="button" display="block" gutterBottom>
-              Department: <InputLabel style={{ display: "inline", paddingLeft: "20px", marginTop: "2.1%", float: "right" }} >{props.inputPlaceholder[10]} </InputLabel>
+              Department: <InputLabel style={{ display: "inline", paddingLeft: "20px", marginTop: "2.1%", float: "right" }} >{props.info["Staff Type"]} </InputLabel>
 
             </Typography>
             <Typography variant="button" display="block" gutterBottom>
-              Designation: <InputLabel style={{ display: "inline", paddingLeft: "20px", marginTop: "2.1%", textAlign: "left" }} >Class Teacher </InputLabel>
+              Designation: <InputLabel style={{ display: "inline", paddingLeft: "20px", marginTop: "2.1%", textAlign: "left" }} >{props.info["Designation"]} </InputLabel>
             </Typography>
             <Typography variant="button" display="block" gutterBottom>
-              Reporting To: <InputLabel style={{ display: "inline", paddingLeft: "20px", marginTop: "2.1%", float: "right" }} >Divesh Kumar </InputLabel>
+              Reporting To: <InputLabel style={{ display: "inline", paddingLeft: "20px", marginTop: "2.1%", float: "right" }} >{props.info["Reporting Manager Name"]} </InputLabel>
             </Typography>
           </Box>
         </Paper>
@@ -455,34 +512,7 @@ export default function TaskProfile(props) {
         </Paper>
         <Paper elevation={3} style={{ position: "absolute", width: "385px", height: "450px", marginLeft: "-12%", marginTop: "115%" }}>
           <Box style={{ float: "left", marginLeft: "5%", marginTop: "2%" }}>
-            <Typography variant="body2" gutterBottom>
-              This is a Comment -  <Typography variant="caption" display="inline" gutterBottom fontSize="10px" color="maroon">
-                31/10/2021 - <Typography variant="caption" display="inline" gutterBottom fontSize="10px" color="maroon">
-                  Himanshu
-                </Typography>
-              </Typography>
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              This is a Comment -  <Typography variant="caption" display="inline" gutterBottom fontSize="10px" color="maroon">
-                31/10/2021 - <Typography variant="caption" display="inline" gutterBottom fontSize="10px" color="maroon">
-                  Himanshu
-                </Typography>
-              </Typography>
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              This is a Comment -  <Typography variant="caption" display="inline" gutterBottom fontSize="10px" color="maroon">
-                31/10/2021 - <Typography variant="caption" display="inline" gutterBottom fontSize="10px" color="maroon">
-                  Himanshu
-                </Typography>
-              </Typography>
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              This is a Comment -  <Typography variant="caption" display="inline" gutterBottom fontSize="10px" color="maroon">
-                31/10/2021
-              </Typography> - <Typography variant="caption" display="inline" gutterBottom fontSize="10px" color="maroon">
-                Himanshu
-              </Typography>
-            </Typography>
+            {com}
           </Box>
           <TextField
             id="outlined-multiline-static"
@@ -491,8 +521,9 @@ export default function TaskProfile(props) {
             rows={10}
             defaultValue="Add Comments"
             style={{ width: "90%", marginTop: "5%" }}
+            onChange={getComments2}
           />
-          <Button variant="outlined" style={{ marginTop: "5%" }}>Add Comment</Button>
+          <Button variant="outlined" style={{ marginTop: "5%" }} onClick={storeUpdates}>Add Comment</Button>
         </Paper>
         <Paper elevation={3} style={{ position: "absolute", width: "300px", height: "100px", marginTop: "190%" }}>
           <Box style={{ position: "relative", marginTop: "6%" }}>

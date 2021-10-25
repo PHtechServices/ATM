@@ -30,46 +30,13 @@ function FirstPage(props) {
 
     useEffect(() => {
         const id = props.id
-                    const data = JSON.stringify({
-                        "id": id
-                    });
-
-                    var config = {
-                        method: 'POST',
-                        url: 'http://127.0.0.1:5000/getComments',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        data: data
-                    };
-
-                    axios(config)
-                        .then(response => {
-                            var comments1 = response.data["comments"]
-                            if (comments1.length != 0){setDd(true)
-                                setCom(comments1.map((item) =>
-                                Object.keys(item).map((key, index) => (
-                                    <p>{item[key]}</p>)))
-        );}
-                            
-                        })
-     });
-
-
-
-    const openTaskEditor = (e) => {
-        var inputPlaceholder = []
-
-    {
-        const id = e.target.id
-        console.log(id)
         const data = JSON.stringify({
-            "objid": id
+            "id": id
         });
 
         var config = {
             method: 'POST',
-            url: 'http://127.0.0.1:5000/getjson',
+            url: 'http://127.0.0.1:5000/getComments',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -78,21 +45,56 @@ function FirstPage(props) {
 
         axios(config)
             .then(response => {
-                const test = response.data["json"]
-                const listItems = Object.keys(test).map((key, index) => (
-                    inputPlaceholder.push(test[key])
-                ))
-                console.log(inputPlaceholder)
-                ReactDOM.render(
-                  <React.StrictMode>
-                    <EditTask inputPlaceholder={inputPlaceholder} id={id}/>
-                  </React.StrictMode>,
-                  document.getElementById('dLogin'));
+                var comments1 = response.data["comments"]
+                if (comments1.length != 0) {
+                    setDd(true)
+                    setCom(comments1.map((item) =>
+                        Object.keys(item).map((key, index) => (
+                            <p>{item[key]}</p>)))
+                    );
+                }
+
             })
-            .catch(function (error) {
-                console.log("error")
+    });
+
+
+
+    const openTaskEditor = (e) => {
+        var inputPlaceholder = []
+
+        {
+            const id = e.target.id
+            console.log(id)
+            const data = JSON.stringify({
+                "objid": id
             });
-    }
+
+            var config = {
+                method: 'POST',
+                url: 'http://127.0.0.1:5000/getjson',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
+
+            axios(config)
+                .then(response => {
+                    const test = response.data["json"]
+                    const listItems = Object.keys(test).map((key, index) => (
+                        inputPlaceholder.push(test[key])
+                    ))
+                    console.log(inputPlaceholder)
+                    ReactDOM.render(
+                        <React.StrictMode>
+                            <EditTask inputPlaceholder={inputPlaceholder} id={id} />
+                        </React.StrictMode>,
+                        document.getElementById('dLogin'));
+                })
+                .catch(function (error) {
+                    console.log("error")
+                });
+        }
     }
 
     const openTaskUpdater = (e) => {
@@ -126,9 +128,9 @@ function FirstPage(props) {
                     y = "white"
                 }
                 else if (componentsInput["title"] == "Update Task Status") {
-                   x = "grey"
-                   y = "green"
-                   ff = true
+                    x = "grey"
+                    y = "green"
+                    ff = true
                 }
                 console.log(y)
                 console.log(x)
@@ -193,7 +195,7 @@ function FirstPage(props) {
                         var description = response.data["data"]
                         var pop = response.data["populator"]
                         let listItems
-                        if (props.msg == "tasks are not assigned"){
+                        if (props.msg == "tasks are not assigned") {
                             listItems = <div>No Tasks to Display</div>
                         }
                         else {
