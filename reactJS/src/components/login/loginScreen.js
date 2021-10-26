@@ -32,7 +32,7 @@ function Login() {
 
     var config = {
       method: 'POST',
-      url: 'http://127.0.0.1:5000/login',
+      url: 'http://34.136.41.197:5000/login',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -72,7 +72,7 @@ function Login() {
         else {
           var config = {
             method: 'POST',
-            url: 'http://127.0.0.1:5000/getProfileInfo',
+            url: 'http://34.136.41.197:5000/getProfileInfo',
             headers: {
               'Content-Type': 'application/json'
             },
@@ -115,7 +115,7 @@ function Login() {
 
               var config = {
                 method: 'POST',
-                url: 'http://127.0.0.1:5000/taskassign',
+                url: 'http://34.136.41.197:5000/taskassign',
                 headers: {
                   'Content-Type': 'application/json'
                 },

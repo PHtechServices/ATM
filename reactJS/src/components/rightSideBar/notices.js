@@ -45,7 +45,7 @@ function Notices(props) {
 
     var config = {
       method: 'POST',
-      url: 'http://127.0.0.1:5000/taskToBeApproved',
+      url: 'http://34.136.41.197:5000/taskToBeApproved',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -116,7 +116,7 @@ function Notices(props) {
     else if (operation == "classes") {
       var config = {
         method: 'GET',
-        url: 'http://127.0.0.1:5000/classInfo',
+        url: 'http://34.136.41.197:5000/classInfo',
         headers: {
           'Content-Type': 'application/json'
         },
@@ -148,7 +148,7 @@ function Notices(props) {
 
     var config = {
       method: 'POST',
-      url: 'http://127.0.0.1:5000/broadcast',
+      url: 'http://34.136.41.197:5000/broadcast',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -169,7 +169,7 @@ function Notices(props) {
   const getNotifications = (e) => {
     var config = {
       method: 'get',
-      url: 'http://127.0.0.1:5000/getBroadcast',
+      url: 'http://34.136.41.197:5000/getBroadcast',
       headers: {
         'Content-Type': 'application/json'
       },

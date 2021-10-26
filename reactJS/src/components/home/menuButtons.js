@@ -86,7 +86,7 @@ function MenuButtons(props) {
 
     var config = {
       method: 'POST',
-      url: 'http://127.0.0.1:5000/taskassign',
+      url: 'http://34.136.41.197:5000/taskassign',
       headers: {
         'Content-Type': 'application/json'
       },

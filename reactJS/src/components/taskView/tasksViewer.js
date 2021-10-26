@@ -128,7 +128,7 @@ function TaskViewer(props) {
 
             var config = {
                 method: 'POST',
-                url: 'http://127.0.0.1:5000/getjson',
+                url: 'http://34.136.41.197:5000/getjson',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -147,7 +147,7 @@ function TaskViewer(props) {
             
                     var config = {
                         method: 'POST',
-                        url: 'http://127.0.0.1:5000/taskstatus',
+                        url: 'http://34.136.41.197:5000/taskstatus',
                         headers: {
                             'Content-Type': 'application/json'
                         },
@@ -225,7 +225,7 @@ function TaskViewer(props) {
 
             var config = {
                 method: 'POST',
-                url: 'http://127.0.0.1:5000/getjson',
+                url: 'http://34.136.41.197:5000/getjson',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -264,7 +264,7 @@ function TaskViewer(props) {
 
         var config = {
             method: 'POST',
-            url: 'http://127.0.0.1:5000/taskstatus',
+            url: 'http://34.136.41.197:5000/taskstatus',
             headers: {
                 'Content-Type': 'application/json'
             },

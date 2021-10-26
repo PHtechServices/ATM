@@ -56,7 +56,7 @@ export default function AttendanceComponent() {
       
           var config = {
             method: 'POST',
-            url: 'http://127.0.0.1:5000/filter2',
+            url: 'http://34.136.41.197:5000/filter2',
             headers: {
               'Content-Type': 'application/json'
             },
